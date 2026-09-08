@@ -1,0 +1,6 @@
+# Apache 2.4: never expose configuration, development files or backups.
+Options -Indexes
+DirectoryIndex index.php
+<FilesMatch "(?i)(^(settings\.php|README.*|TEST-REPORT.*|LICENSE.*)$|\.(sqlite|sqlite3|db)(-wal|-shm)?$|\.(log|bak|old|dist|ini|md|py|json|lock)$|~$)">
+    Require all denied
+</FilesMatch>

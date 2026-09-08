@@ -1,0 +1,27 @@
+# Local configuration and credentials
+/settings.php
+
+# SQLite runtime data and write-ahead-log sidecars
+*.sqlite
+*.sqlite3
+*.db
+*.sqlite-wal
+*.sqlite-shm
+*.sqlite3-wal
+*.sqlite3-shm
+*.db-wal
+*.db-shm
+
+# Application and web-server runtime logs
+application.log
+application.log.*
+log.lock
+error_log
+php_errors.log
+
+# Editor and operating-system files
+*.code-workspace
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
