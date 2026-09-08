@@ -2,6 +2,22 @@
 
 A small, self-hosted website analytics application.
 
+## Contents
+
+- [Requirements](#requirements)
+- [Install](#install)
+  - [Apache](#apache)
+  - [Content Security Policy on monitored websites](#content-security-policy-on-monitored-websites)
+- [Dashboard](#dashboard)
+- [Collector contract](#collector-contract)
+  - [Tracker behavior](#tracker-behavior)
+- [Authentication and data protection](#authentication-and-data-protection)
+- [Database and logs](#database-and-logs)
+- [Files](#files)
+- [Troubleshooting](#troubleshooting)
+- [License](#license)
+- [Implementation references](#implementation-references)
+
 ## Requirements
 
 - PHP **8.1 or later**, with PDO, **pdo_sqlite**, sessions, JSON and standard PHP functions enabled.
