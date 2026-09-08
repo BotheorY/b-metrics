@@ -3,7 +3,6 @@
 declare(strict_types=1);
 
 // Required: replace this value with a long, unique password (at least 12 characters).
-// Plain text is intentionally used as requested; protect file and backup access.
 $admin_password = 'CHANGE-ME-BEFORE-USE';
 
 // Exact hostnames only: no scheme, path or wildcard. Add www/subdomains separately.
@@ -17,8 +16,8 @@ $app_url = '';
 $timezone = 'Europe/Rome';
 
 // null automatically chooses a private sibling of the server's document root.
-// If that parent is not writable, specify an existing writable directory OUTSIDE
-// the public document root. Never use chmod 777. PHP alone needs write access.
+// If that parent is not writable, specify an existing writable directory.
+// Never use chmod 777. PHP alone needs write access.
 $storage_directory = null;
 // null uses <storage_directory>/bmetrics.sqlite; otherwise use an absolute path
 // inside the private storage directory. SQLite creates the database automatically.
