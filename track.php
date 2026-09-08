@@ -92,6 +92,12 @@ foreach (['screen_width', 'screen_height'] as $key) {
     $dimensions[$key] = $value;
 }
 $ipAddress = client_ip();
+// Return the standard success response without persisting excluded traffic.
+// Validation above still applies so this endpoint behaves consistently for all clients.
+if (in_array($ipAddress, $excluded_ip_addresses, true)) {
+    http_response_code(204);
+    exit;
+}
 if (!consume_rate_limit('track:' . $domain . ':' . $ipAddress, $tracking_hits_per_minute, 60)) {
     header('Retry-After: 60');
     fail(429, 'Tracking rate limit exceeded.');

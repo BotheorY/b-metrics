@@ -43,6 +43,16 @@ $start = $startDate->getTimestamp();
 $end = $endDate->modify('+1 day')->getTimestamp();
 $parameters = ['domain' => $domain, 'start' => $start, 'end' => $end];
 $where = 'domain = :domain AND timestamp >= :start AND timestamp < :end';
+if ($excluded_ip_addresses !== []) {
+    $excludedIpPlaceholders = [];
+    foreach ($excluded_ip_addresses as $index => $excludedIpAddress) {
+        $parameterName = 'excluded_ip_' . $index;
+        $excludedIpPlaceholders[] = ':' . $parameterName;
+        $parameters[$parameterName] = $excludedIpAddress;
+    }
+    // Apply the same configuration to historical rows as to new collection.
+    $where .= ' AND ip_address NOT IN (' . implode(', ', $excludedIpPlaceholders) . ')';
+}
 
 // A read transaction provides one consistent snapshot across cards, chart and tables.
 $connection->beginTransaction();
@@ -54,7 +64,10 @@ try {
     // Boundaries are computed in PHP: SQLite localtime cannot honor arbitrary IANA zones or DST reliably.
     $query = $connection->prepare('SELECT COUNT(*) AS pageviews, COUNT(DISTINCT ip_address) AS visitors FROM hits WHERE ' . $where);
     for ($date = $startDate; $date <= $endDate; $date = $date->modify('+1 day')) {
-        $query->execute(['domain' => $domain, 'start' => $date->getTimestamp(), 'end' => $date->modify('+1 day')->getTimestamp()]);
+        $dailyParameters = $parameters;
+        $dailyParameters['start'] = $date->getTimestamp();
+        $dailyParameters['end'] = $date->modify('+1 day')->getTimestamp();
+        $query->execute($dailyParameters);
         $row = $query->fetch();
         $series[] = ['date' => $date->format('Y-m-d'), 'pageviews' => (int) $row['pageviews'], 'visitors' => (int) $row['visitors']];
     }

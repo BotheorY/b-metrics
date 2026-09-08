@@ -9,6 +9,10 @@ $admin_password = 'CHANGE-ME-BEFORE-USE';
 // For internationalized domains, use their ASCII/Punycode representation.
 $allowed_domains = ['example.com', 'www.example.com'];
 
+// Optional exact IPv4 and IPv6 addresses to exclude from analytics. Addresses
+// are normalized before comparison; leave this array empty to disable exclusion.
+$excluded_ip_addresses = [];
+
 // Optional canonical installation URL, without trailing slash, e.g.:
 // https://analytics.example.com/b-metrics
 // Set this behind an HTTPS-terminating reverse proxy to enforce secure cookies.

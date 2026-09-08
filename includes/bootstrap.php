@@ -172,6 +172,26 @@ if (!is_array($allowed_domains) || $allowed_domains === []) {
     throw new RuntimeException('Configure at least one allowed domain in settings.php.');
 }
 $allowed_domains = array_values(array_unique(array_map('normalize_host', $allowed_domains)));
+// Keeping this optional preserves compatibility with existing settings.php files.
+$excluded_ip_addresses = $excluded_ip_addresses ?? [];
+if (!is_array($excluded_ip_addresses) || count($excluded_ip_addresses) > 900) {
+    throw new RuntimeException('Excluded IP addresses must be an array of at most 900 entries.');
+}
+$normalizedExcludedIpAddresses = [];
+foreach ($excluded_ip_addresses as $excludedIpAddress) {
+    if (!is_string($excludedIpAddress) ||
+        filter_var($excludedIpAddress, FILTER_VALIDATE_IP) === false) {
+        throw new RuntimeException('Each excluded IP address must be a valid IPv4 or IPv6 address.');
+    }
+    $packedIpAddress = inet_pton($excludedIpAddress);
+    $normalizedIpAddress = $packedIpAddress === false ? false : inet_ntop($packedIpAddress);
+    if ($normalizedIpAddress === false) {
+        throw new RuntimeException('Each excluded IP address must be a valid IPv4 or IPv6 address.');
+    }
+    $normalizedExcludedIpAddresses[] = $normalizedIpAddress;
+}
+// Bound parameters are used by reports, so keep this comfortably below SQLite's variable limit.
+$excluded_ip_addresses = array_values(array_unique($normalizedExcludedIpAddresses));
 $report_timezone = new DateTimeZone($timezone);
 if ($app_url !== '' && (parse_http_url($app_url) === null ||
     isset(parse_http_url($app_url)['query']) || isset(parse_http_url($app_url)['fragment']))) {

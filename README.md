@@ -34,6 +34,7 @@ A small, self-hosted website analytics application.
    ```php
    $admin_password = 'replace-with-your-own-long-unique-password';
    $allowed_domains = ['example.com', 'www.example.com', 'another-site.it'];
+   $excluded_ip_addresses = ['203.0.113.10', '2001:db8::10']; // Optional
    $app_url = 'https://analytics.example.com/b-metrics';
    $timezone = 'Europe/Rome';
    ```
@@ -100,6 +101,7 @@ Filter changes use fetch and replace the results without a page reload. In-fligh
 - Only HTTP/HTTPS origins are accepted. Ports and scheme do not create separate domains. Host case and trailing DNS dots are normalized. `www.example.com` and `example.com` are separate hosts; subdomains are not implicitly trusted. Use ASCII/Punycode for internationalized hosts.
 - The page URL must have the same normalized host as the accepted source. A client-supplied `domain`, timestamp, IP or user agent does not override the server's values.
 - The stored IP comes exclusively from `REMOTE_ADDR`, normalized with `inet_pton`/`inet_ntop`. Forwarded-IP headers are ignored. Configure trusted-proxy IP restoration at the web server if applicable; otherwise proxy users may share the proxy IP and its rate limit.
+- Set `$excluded_ip_addresses` in `settings.php` to an optional list of exact IPv4 and/or IPv6 addresses that must not count. Entries are validated and normalized during startup; invalid configuration fails safely. Excluded new hits return `204` without being stored, and matching historical rows are omitted from reports.
 - JSON body limit: 16 KiB. URL and referrer: 4096 bytes each. User agent: at most 1024 bytes. Language: at most 64 bytes. Screen dimensions: integer 0–32768. Unknown screen dimensions default to zero. Referrer may be empty; nonempty referrers must be HTTP/HTTPS URLs without embedded credentials. Invalid fields reject the whole event.
 - `event_id` is optional for direct API use (server-generated when absent). Supplied IDs require 16–100 ASCII letters, digits, hyphens or underscores. The generated tracker supplies a random ID. A unique `(domain, event_id)` constraint prevents duplicate storage, although retries still consume rate-limit capacity.
 - Success or an already-stored event: **204**. Invalid payload: **400**. Untrusted source: **403**. Unsupported method: **405**. Too large: **413**. Unsupported media type: **415**. Throttled: **429** with `Retry-After`. Setup/database/server error: **503**, with a request ID.
