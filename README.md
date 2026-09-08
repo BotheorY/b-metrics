@@ -132,6 +132,7 @@ To back up a live WAL database, use SQLite's online backup facility or the SQLit
 | `assets/app.css` | Dashboard/login styling and mobile/tablet layouts. |
 | `assets/favicon.svg` | App icon. |
 | `.htaccess` and directory `.htaccess` files | Apache defense-in-depth access restrictions. |
+| `LICENSE` | MIT License terms. |
 | `README.md` | Technical reference. |
 
 ## Troubleshooting
@@ -147,6 +148,10 @@ To back up a live WAL database, use SQLite's online backup facility or the SQLit
 | All visits have one IP | Reverse proxy setup; B-Metrics deliberately ignores untrusted forwarded headers. |
 | Locked database / 503 during traffic spikes | Correct filesystem locks, local disk, permissions, write contention and hosting limits. |
 | Clipboard copy unavailable | Use the automatically selected snippet and Ctrl+C / Command+C; deploy over HTTPS. |
+
+## License
+
+This project is licensed under the [MIT License](LICENSE). Copyright (c) 2026 Botheory Labs.
 
 ## Implementation references
 
