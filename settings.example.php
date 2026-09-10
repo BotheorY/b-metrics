@@ -32,6 +32,8 @@ $pdo_options = [
     PDO::ATTR_TIMEOUT => 5,
 ];
 
+// Idle timeout is refreshed by activity. Absolute timeout is measured from login
+// and also controls how long the browser retains the session cookie.
 $session_idle_seconds = 1800;
 $session_absolute_seconds = 28800;
 $login_attempt_limit = 8;
