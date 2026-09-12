@@ -35,9 +35,26 @@ function start_admin_session(): void
         'httponly' => true, 'samesite' => 'Strict']);
     session_start();
     $now = time();
-    if (!empty($_SESSION['authenticated']) && (
-        $now - (int) ($_SESSION['last_activity'] ?? 0) > $GLOBALS['session_idle_seconds'] ||
-        $now - (int) ($_SESSION['authenticated_at'] ?? 0) > $GLOBALS['session_absolute_seconds'] ||
+    if (
+        !empty($_SESSION['authenticated']) && (
+        (
+            (
+                (
+                    ((int) ($_SESSION['last_activity'] ?? 0)) > 0
+                ) &&
+                (
+                    ($now - (int) $_SESSION['last_activity']) > $GLOBALS['session_idle_seconds']
+                )
+            ) || 
+            (
+                (
+                    ((int) ($_SESSION['last_activity'] ?? 0)) <= 0
+                ) &&
+                (
+                    ($now - (int) ($_SESSION['authenticated_at'] ?? 0)) > $GLOBALS['session_absolute_seconds']
+                )
+            )
+        ) ||
         !hash_equals(hash('sha256', $GLOBALS['admin_password']), (string) ($_SESSION['password_version'] ?? ''))
     )) {
         $_SESSION = [];
